@@ -37,6 +37,7 @@ Data source: `src/data/mockShellfishData.js` (960 records generated programmatic
 - Treatment comparison grouped bar chart
 - Site comparison bar chart
 - Sortable, searchable, paginated data table
+- Geographic site map with interactive markers (OpenStreetMap)
 
 ## Prerequisites
 
@@ -120,6 +121,9 @@ shellfish-farm-dashboard/
     ├── styles.css
     ├── data/
     │   └── mockShellfishData.js
+    ├── pages/
+    │   ├── DashboardPage.jsx
+    │   └── MapPage.jsx
     └── components/
         ├── Header.jsx
         ├── Filters.jsx
@@ -127,7 +131,8 @@ shellfish-farm-dashboard/
         ├── TimeSeriesChart.jsx
         ├── TreatmentComparisonChart.jsx
         ├── SiteComparisonChart.jsx
-        └── DataTable.jsx
+        ├── DataTable.jsx
+        └── SiteMap.jsx
 ```
 
 ## Scripts

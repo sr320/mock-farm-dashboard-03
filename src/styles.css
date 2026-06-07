@@ -50,11 +50,49 @@ body {
   margin: 0 auto;
 }
 
+.header-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
 .dashboard-header h1 {
   font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   margin-bottom: 0.35rem;
+}
+
+.header-nav {
+  display: flex;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.nav-link {
+  padding: 0.45rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #cbd5e1;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-link.active {
+  background: #f8fafc;
+  color: #1e40af;
 }
 
 .subtitle {
@@ -372,10 +410,212 @@ body {
   background: var(--color-surface);
 }
 
+/* Map page */
+.map-page {
+  gap: 1rem;
+}
+
+.map-intro {
+  padding: 1rem 1.25rem;
+}
+
+.map-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.map-panel {
+  padding: 0;
+  overflow: hidden;
+}
+
+.site-map-wrapper {
+  height: 520px;
+  width: 100%;
+}
+
+.site-map {
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+}
+
+.map-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.map-detail-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.map-detail-region {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.map-detail-desc {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.map-detail-placeholder {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.map-detail-stats {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.map-detail-stats div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  font-size: 0.85rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.map-detail-stats dt {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.map-detail-stats dd {
+  font-weight: 600;
+  text-align: right;
+}
+
+.map-detail-link,
+.map-popup-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.map-detail-link:hover,
+.map-popup-link:hover {
+  text-decoration: underline;
+}
+
+.site-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.site-list-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  border: 1px solid var(--color-border);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.site-list-card:hover {
+  border-color: #94a3b8;
+}
+
+.site-list-card.active {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.site-list-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.site-list-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.site-list-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.site-list-region {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.site-list-survival {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.map-popup {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  min-width: 180px;
+}
+
+.map-popup-region {
+  color: #64748b;
+  margin: 0.15rem 0 0.5rem;
+}
+
+.map-popup-stats {
+  display: grid;
+  gap: 0.3rem;
+  margin-bottom: 0.25rem;
+}
+
+.map-popup-stats div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.map-popup-stats dt {
+  color: #64748b;
+}
+
+.map-popup-stats dd {
+  font-weight: 600;
+  margin: 0;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .charts-row {
     grid-template-columns: 1fr;
+  }
+
+  .map-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .site-map-wrapper {
+    height: 400px;
   }
 }
 
@@ -384,8 +624,25 @@ body {
     padding: 1.5rem 1rem;
   }
 
+  .header-top {
+    flex-direction: column;
+  }
+
+  .header-nav {
+    width: 100%;
+  }
+
+  .nav-link {
+    flex: 1;
+    text-align: center;
+  }
+
   .dashboard-header h1 {
     font-size: 1.4rem;
+  }
+
+  .site-map-wrapper {
+    height: 320px;
   }
 
   .dashboard-main {

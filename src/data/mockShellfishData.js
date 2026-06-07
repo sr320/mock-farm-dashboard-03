@@ -1,5 +1,40 @@
 export const SITES = ['Baywater', 'Sequim Bay', 'Goose Point', 'Westcott'];
 
+/** Mock geographic coordinates for demonstration (Pacific Northwest shellfish region) */
+export const SITE_LOCATIONS = {
+  Baywater: {
+    lat: 47.768,
+    lng: -122.834,
+    region: 'Hood Canal, WA',
+    description: 'Protected inlet site with warmer seasonal water and strong growth.',
+    color: '#2563eb',
+  },
+  'Sequim Bay': {
+    lat: 48.079,
+    lng: -123.102,
+    region: 'Strait of Juan de Fuca, WA',
+    description: 'Moderate temperatures with relatively stable survival performance.',
+    color: '#0891b2',
+  },
+  'Goose Point': {
+    lat: 46.585,
+    lng: -123.938,
+    region: 'Willapa Bay, WA',
+    description: 'Exposed estuary site with variable temperature and survival.',
+    color: '#d97706',
+  },
+  Westcott: {
+    lat: 48.321,
+    lng: -124.482,
+    region: 'Olympic Coast, WA',
+    description: 'Cooler outer-coast site with moderate growth rates.',
+    color: '#6366f1',
+  },
+};
+
+export const MAP_CENTER = { lat: 47.85, lng: -123.35 };
+export const MAP_ZOOM = 8;
+
 export const TREATMENTS = [
   'Control',
   'Heat primed',
@@ -351,4 +386,56 @@ export function getSiteComparisonData(filtered, metric = 'growth') {
       ? Math.round((bySite[site].sum / bySite[site].count) * 10) / 10
       : 0,
   }));
+}
+
+export function getSiteGeographicSummaries(data) {
+  const lastBySiteTreatment = new Map();
+  for (const row of data) {
+    const key = `${row.site}|${row.treatment}`;
+    const existing = lastBySiteTreatment.get(key);
+    if (!existing || row.date > existing.date) {
+      lastBySiteTreatment.set(key, row);
+    }
+  }
+
+  return SITES.map((site) => {
+    const siteRows = data.filter((r) => r.site === site);
+    const finalRows = [...lastBySiteTreatment.values()].filter(
+      (r) => r.site === site
+    );
+    const location = SITE_LOCATIONS[site];
+
+    const meanGrowth =
+      siteRows.length > 0
+        ? Math.round(
+            (siteRows.reduce((s, r) => s + r.growth_mm, 0) / siteRows.length) *
+              10
+          ) / 10
+        : null;
+    const meanTemp =
+      siteRows.length > 0
+        ? Math.round(
+            (siteRows.reduce((s, r) => s + r.temperature_C, 0) /
+              siteRows.length) *
+              10
+          ) / 10
+        : null;
+    const finalSurvival =
+      finalRows.length > 0
+        ? Math.round(
+            (finalRows.reduce((s, r) => s + r.survival_percent, 0) /
+              finalRows.length) *
+              10
+          ) / 10
+        : null;
+
+    return {
+      site,
+      ...location,
+      meanGrowth,
+      meanTemp,
+      finalSurvival,
+      recordCount: siteRows.length,
+    };
+  });
 }
