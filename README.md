@@ -56,7 +56,7 @@ npm install
 npm run dev
 ```
 
-Open the URL shown in the terminal (typically `http://localhost:5173/shellfish-farm-dashboard/`).
+Open the URL shown in the terminal (typically `http://localhost:5173/mock-farm-dashboard-03/`).
 
 ## Build for Production
 
@@ -74,38 +74,41 @@ npm run preview
 
 ## Deploy to GitHub Pages
 
-This project is configured for GitHub Pages with base path `/shellfish-farm-dashboard/`.
+This project is configured for GitHub Pages with base path `/mock-farm-dashboard-03/` (must match the repository name).
 
 ### Option 1: Using the deploy script (recommended)
 
-1. Create a GitHub repository named **`shellfish-farm-dashboard`** (the repo name must match the base path).
-2. Push this project to the repository.
-3. Run:
+1. Push this project to your GitHub repository.
+2. Run:
 
 ```bash
 npm run deploy
 ```
 
-This builds the project and publishes the `dist/` folder to the `gh-pages` branch.
+This builds the project and publishes the `dist/` folder to the `gh-pages` branch. A `404.html` copy is included so client-side routes (e.g. `/map`) work on GitHub Pages.
 
-4. In your GitHub repository, go to **Settings → Pages** and set the source to the **`gh-pages`** branch, folder **`/ (root)`**.
-5. Your site will be available at:
+3. In your GitHub repository, go to **Settings → Pages** and set the source to the **`gh-pages`** branch, folder **`/ (root)`** (not the `main` branch — serving `main` will show a blank page because it contains source files, not the built app).
+4. Your site will be available at:
 
 ```
-https://<your-username>.github.io/shellfish-farm-dashboard/
+https://<your-username>.github.io/mock-farm-dashboard-03/
 ```
 
-### Option 2: GitHub Actions (alternative)
+### Option 2: GitHub Actions (automatic)
 
-You can also configure a GitHub Actions workflow to deploy on push to `main`. The `gh-pages` package approach above is the simplest for a first deployment.
+A workflow at `.github/workflows/deploy.yml` builds and deploys to the `gh-pages` branch on every push to `main`. After pushing, enable it by setting **Settings → Pages → Source** to the **`gh-pages`** branch.
+
+If the page is blank, the most common cause is Pages serving the **`main`** branch instead of the built **`gh-pages`** branch.
 
 ### Important: Repository name
 
-The Vite `base` path is set to `/shellfish-farm-dashboard/`. If your GitHub repository has a different name, update `base` in `vite.config.js` to match:
+The Vite `base` path must match your GitHub repository name. It is currently set to `/mock-farm-dashboard-03/`. If you rename the repo, update `base` in `vite.config.js`:
 
 ```js
 base: '/your-repo-name/',
 ```
+
+The React Router basename is derived automatically from this setting.
 
 ## Project Structure
 

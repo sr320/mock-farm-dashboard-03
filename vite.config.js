@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/shellfish-farm-dashboard/',
+  base: '/mock-farm-dashboard-03/',
 });

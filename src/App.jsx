@@ -4,9 +4,11 @@ import DashboardPage from './pages/DashboardPage';
 import MapPage from './pages/MapPage';
 import { mockShellfishData } from './data/mockShellfishData';
 
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/';
+
 export default function App() {
   return (
-    <BrowserRouter basename="/shellfish-farm-dashboard">
+    <BrowserRouter basename={basename}>
       <div className="app">
         <Header />
         <Routes>
