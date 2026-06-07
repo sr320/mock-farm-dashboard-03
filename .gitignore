@@ -1,6 +1,8 @@
 node_modules
 dist
 .DS_Store
+
+# docs/ is the GitHub Pages build output — keep it in git
 *.local
 .env
 .env.*

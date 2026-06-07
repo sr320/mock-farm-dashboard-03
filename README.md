@@ -76,29 +76,42 @@ npm run preview
 
 This project is configured for GitHub Pages with base path `/mock-farm-dashboard-03/` (must match the repository name).
 
-### Option 1: Using the deploy script (recommended)
+### GitHub Pages setup (required — fixes blank page)
 
-1. Push this project to your GitHub repository.
-2. Run:
+A blank page means GitHub Pages is serving **source files** instead of the **built app**.
 
-```bash
-npm run deploy
-```
+1. Push to `main` (the GitHub Action builds and publishes the app to the **`docs/`** folder).
+2. In your repository go to **Settings → Pages**.
+3. Under **Build and deployment → Source**, choose **Deploy from a branch**.
+4. Set **Branch** to **`main`** and **Folder** to **`/docs`** (not `/ (root)`).
+5. Save and wait 1–2 minutes.
 
-This builds the project and publishes the `dist/` folder to the `gh-pages` branch. A `404.html` copy is included so client-side routes (e.g. `/map`) work on GitHub Pages.
-
-3. In your GitHub repository, go to **Settings → Pages** and set the source to the **`gh-pages`** branch, folder **`/ (root)`** (not the `main` branch — serving `main` will show a blank page because it contains source files, not the built app).
-4. Your site will be available at:
+Your site will be at:
 
 ```
 https://<your-username>.github.io/mock-farm-dashboard-03/
 ```
 
-### Option 2: GitHub Actions (automatic)
+### Manual deploy (alternative)
 
-A workflow at `.github/workflows/deploy.yml` builds and deploys to the `gh-pages` branch on every push to `main`. After pushing, enable it by setting **Settings → Pages → Source** to the **`gh-pages`** branch.
+```bash
+npm run build
+cp -r dist/* docs/
+cp dist/.nojekyll docs/
+git add docs/
+git commit -m "Update GitHub Pages build"
+git push origin main
+```
 
-If the page is blank, the most common cause is Pages serving the **`main`** branch instead of the built **`gh-pages`** branch.
+Then confirm Pages is set to **main** branch, **`/docs`** folder as above.
+
+### Troubleshooting a blank page
+
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| Blank white page | Pages serving `main` root (dev `index.html` loads `/src/main.jsx`) | Switch Pages folder to **`/docs`** |
+| 404 on JS/CSS files | Wrong base path in `vite.config.js` | `base` must match repo name: `/mock-farm-dashboard-03/` |
+| `/map` route 404 | Missing SPA fallback | Build copies `index.html` → `404.html` automatically |
 
 ### Important: Repository name
 

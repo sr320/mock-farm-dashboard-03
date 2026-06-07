@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build && cp dist/index.html dist/404.html && touch dist/.nojekyll",
     "preview": "vite preview",
-    "deploy": "npm run build && gh-pages -d dist"
+    "deploy": "npm run build && rm -rf docs && mkdir -p docs && cp -r dist/* docs/ && cp dist/.nojekyll docs/"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

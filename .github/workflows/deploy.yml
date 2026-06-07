@@ -22,8 +22,13 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - name: Deploy to gh-pages branch
+      # Deploy built files to docs/ on main so GitHub Pages can serve them.
+      # In repo Settings → Pages, set Source to: main branch, /docs folder.
+      - name: Deploy to docs/ on main
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          publish_branch: main
+          destination_dir: docs
+          keep_files: false
