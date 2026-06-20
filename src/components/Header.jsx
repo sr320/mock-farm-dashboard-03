@@ -1,17 +1,25 @@
 import { NavLink } from 'react-router-dom';
+import logo from '../assets/logo.png';
 
 export default function Header() {
   return (
     <header className="dashboard-header">
       <div className="header-content">
         <div className="header-top">
-          <div>
-            <h1>Shellfish Farm Outplant Dashboard</h1>
-            <p className="subtitle">
-              Multi-year <em>Crassostrea gigas</em> stress-hardening outplant
-              monitoring across Puget Sound &amp; Willapa Bay farm sites and
-              priming treatments
-            </p>
+          <div className="header-brand">
+            <img
+              className="header-logo"
+              src={logo}
+              alt="Roberts Lab logo"
+            />
+            <div>
+              <h1>Shellfish Farm Outplant Dashboard</h1>
+              <p className="subtitle">
+                Multi-year <em>Crassostrea gigas</em> stress-hardening outplant
+                monitoring across Puget Sound &amp; Willapa Bay farm sites and
+                priming treatments
+              </p>
+            </div>
           </div>
           <nav className="header-nav" aria-label="Main navigation">
             <NavLink
