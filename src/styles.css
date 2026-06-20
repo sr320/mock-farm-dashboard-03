@@ -253,6 +253,67 @@ body {
   color: var(--color-text-muted);
 }
 
+.live-temperature-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.live-temperature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.9rem;
+}
+
+.live-temperature-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.live-temperature-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.live-temperature-card-header h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.live-temperature-card-header strong {
+  font-size: 1.15rem;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.live-temperature-meta {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.live-temperature-card a {
+  width: fit-content;
+  font-size: 0.82rem;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.live-temperature-card a:hover {
+  text-decoration: underline;
+}
+
 /* Charts */
 .chart-section {
   width: 100%;
