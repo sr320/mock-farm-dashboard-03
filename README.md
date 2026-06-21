@@ -14,8 +14,8 @@ scripts rather than by a runtime application server.
 
 ## Website
 
-- Public dashboard: <https://sr320.github.io/mock-farm-dashboard-03/>
-- Research overview: <https://sr320.github.io/mock-farm-dashboard-03/research>
+- Public dashboard: <https://robertslab.github.io/SHIELD/>
+- Research overview: <https://robertslab.github.io/SHIELD/research>
 
 The website now includes four main views:
 
@@ -160,14 +160,14 @@ npm run dev
 ```
 
 Open the URL shown in the terminal, typically
-`http://localhost:5173/mock-farm-dashboard-03/`.
+`http://localhost:5173/SHIELD/`.
 
 Local route shortcuts:
 
-- Dashboard: `http://localhost:5173/mock-farm-dashboard-03/`
-- Site map: `http://localhost:5173/mock-farm-dashboard-03/map`
-- Live data: `http://localhost:5173/mock-farm-dashboard-03/live-data`
-- Research overview: `http://localhost:5173/mock-farm-dashboard-03/research`
+- Dashboard: `http://localhost:5173/SHIELD/`
+- Site map: `http://localhost:5173/SHIELD/map`
+- Live data: `http://localhost:5173/SHIELD/live-data`
+- Research overview: `http://localhost:5173/SHIELD/research`
 
 ## Build And Refresh Data
 
@@ -206,7 +206,7 @@ npm run preview
 ## Deploy To GitHub Pages
 
 This project is configured for GitHub Pages with base path
-`/mock-farm-dashboard-03/`, which must match the repository name.
+`/SHIELD/`, which must match the repository name.
 
 Deployment uses the official GitHub Pages Actions flow in
 `.github/workflows/deploy.yml`. Do not use branch-based deploy from `main` or
@@ -222,13 +222,13 @@ conflicts.
 The site will be available at:
 
 ```text
-https://<your-username>.github.io/mock-farm-dashboard-03/
+https://<your-username>.github.io/SHIELD/
 ```
 
 For this repository, the direct research page is:
 
 ```text
-https://sr320.github.io/mock-farm-dashboard-03/research
+https://robertslab.github.io/SHIELD/research
 ```
 
 You can also trigger a deploy manually from the **Actions** tab:
@@ -240,14 +240,14 @@ You can also trigger a deploy manually from the **Actions** tab:
 |---------|-------|-----|
 | Workflow fails on "Deploy to docs/" | Old branch-based workflow conflicting with GitHub Actions | Use the current Pages workflow and set Pages source to **GitHub Actions** |
 | Blank white page | Pages serving the repository root or `/docs` instead of the Actions artifact | Set Pages source to **GitHub Actions** |
-| 404 on JS/CSS files | Wrong base path in `vite.config.js` | `base` must match repo name: `/mock-farm-dashboard-03/` |
+| 404 on JS/CSS files | Wrong base path in `vite.config.js` | `base` must match repo name: `/SHIELD/` |
 | `/map`, `/live-data`, or `/research` route 404 | Missing SPA fallback | Build copies `index.html` to `404.html` automatically |
 | Intermittent deploy failures | Concurrent pushes racing to deploy | The workflow uses concurrency control; re-run the failed job if needed |
 
 ### Important: Repository Name
 
 The Vite `base` path must match the GitHub repository name. It is currently set
-to `/mock-farm-dashboard-03/`. If you rename the repo, update `base` in
+to `/SHIELD/`. If you rename the repo, update `base` in
 `vite.config.js`:
 
 ```js

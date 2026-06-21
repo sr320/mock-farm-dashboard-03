@@ -27,7 +27,7 @@ export default function App() {
             {mockShellfishData.length.toLocaleString()} observation records ·{' '}
             <Link to="/research">Research background</Link> ·{' '}
             <a
-              href="https://github.com/sr320/mock-farm-dashboard-03"
+              href="https://github.com/RobertsLab/SHIELD"
               target="_blank"
               rel="noreferrer"
             >
