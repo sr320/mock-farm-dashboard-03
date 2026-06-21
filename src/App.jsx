@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Link, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import DashboardPage from './pages/DashboardPage';
 import LiveDataPage from './pages/LiveDataPage';
@@ -25,6 +25,7 @@ export default function App() {
             Longitudinal Dashboard · Real field data — RobertsLab
             project-gigas-conditioning + Baywater 10K-Seed ·{' '}
             {mockShellfishData.length.toLocaleString()} observation records ·{' '}
+            <Link to="/research">Research background</Link> ·{' '}
             <a
               href="https://github.com/sr320/mock-farm-dashboard-03"
               target="_blank"
