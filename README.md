@@ -12,6 +12,20 @@ The app is built with React, Vite, Recharts, Leaflet, and React Router. It is
 deployed as a static single-page app, with data prepared ahead of time by build
 scripts rather than by a runtime application server.
 
+## Website
+
+- Public dashboard: <https://sr320.github.io/mock-farm-dashboard-03/>
+- Research overview: <https://sr320.github.io/mock-farm-dashboard-03/research>
+
+The website now includes four main views:
+
+| Route | View | Purpose |
+|-------|------|---------|
+| `/` | Dashboard | Filter field observations, compare treatments and sites, inspect time-series charts, and export field summaries |
+| `/map` | Site Map | Explore outplant locations, site summaries, and links back into filtered dashboard views |
+| `/live-data` | Live Data | Review near-live environmental observations, source metadata, maps, and OSEL-score context |
+| `/research` | Research Overview | Share project objectives, collaborators, Washington Sea Grant support, and research context |
+
 ## Purpose
 
 The dashboard is intended as a shareable research and collaboration interface
@@ -23,6 +37,8 @@ helps users:
 - View geographic site summaries on an interactive map
 - Check near-live environmental context from nearby observing stations
 - Export the currently filtered field summary for reporting
+- Share a direct research overview page with project objectives, personnel, and
+  funding context
 
 ## How It Works
 
@@ -122,6 +138,8 @@ available, especially `src/data/archivalTemperatureData.json` and
 - Field report export for the current filter state
 - Geographic site map with interactive markers
 - Near-live environmental dashboard with source map and source ledger
+- Research overview page for objectives, collaborators, Washington Sea Grant
+  support, and project summary language
 
 ## Prerequisites
 
@@ -143,6 +161,13 @@ npm run dev
 
 Open the URL shown in the terminal, typically
 `http://localhost:5173/mock-farm-dashboard-03/`.
+
+Local route shortcuts:
+
+- Dashboard: `http://localhost:5173/mock-farm-dashboard-03/`
+- Site map: `http://localhost:5173/mock-farm-dashboard-03/map`
+- Live data: `http://localhost:5173/mock-farm-dashboard-03/live-data`
+- Research overview: `http://localhost:5173/mock-farm-dashboard-03/research`
 
 ## Build And Refresh Data
 
@@ -200,6 +225,12 @@ The site will be available at:
 https://<your-username>.github.io/mock-farm-dashboard-03/
 ```
 
+For this repository, the direct research page is:
+
+```text
+https://sr320.github.io/mock-farm-dashboard-03/research
+```
+
 You can also trigger a deploy manually from the **Actions** tab:
 **Deploy to GitHub Pages** -> **Run workflow**.
 
@@ -210,7 +241,7 @@ You can also trigger a deploy manually from the **Actions** tab:
 | Workflow fails on "Deploy to docs/" | Old branch-based workflow conflicting with GitHub Actions | Use the current Pages workflow and set Pages source to **GitHub Actions** |
 | Blank white page | Pages serving the repository root or `/docs` instead of the Actions artifact | Set Pages source to **GitHub Actions** |
 | 404 on JS/CSS files | Wrong base path in `vite.config.js` | `base` must match repo name: `/mock-farm-dashboard-03/` |
-| `/map` or `/live-data` route 404 | Missing SPA fallback | Build copies `index.html` to `404.html` automatically |
+| `/map`, `/live-data`, or `/research` route 404 | Missing SPA fallback | Build copies `index.html` to `404.html` automatically |
 | Intermittent deploy failures | Concurrent pushes racing to deploy | The workflow uses concurrency control; re-run the failed job if needed |
 
 ### Important: Repository Name
@@ -251,7 +282,8 @@ shield-dashboard/
     ├── pages/
     │   ├── DashboardPage.jsx
     │   ├── LiveDataPage.jsx
-    │   └── MapPage.jsx
+    │   ├── MapPage.jsx
+    │   └── ResearchPage.jsx
     └── components/
         ├── ArchivalTemperatureChart.jsx
         ├── DataTable.jsx
