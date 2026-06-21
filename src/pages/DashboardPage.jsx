@@ -80,11 +80,6 @@ export default function DashboardPage() {
   return (
     <main className="dashboard-main">
       <Filters filters={filters} onChange={setFilters} />
-      <FieldReportExport
-        filters={filters}
-        stats={summaryStats}
-        data={filteredData}
-      />
       <SummaryCards stats={summaryStats} />
       <TimeSeriesChart data={timeSeriesData} metric={filters.metric} />
       <LiveTemperaturePanel />
@@ -101,6 +96,11 @@ export default function DashboardPage() {
         />
       </div>
       <DataTable data={filteredData} />
+      <FieldReportExport
+        filters={filters}
+        stats={summaryStats}
+        data={filteredData}
+      />
     </main>
   );
 }
