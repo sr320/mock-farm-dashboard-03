@@ -108,8 +108,32 @@ CHLOROPHYLL_CANDIDATES = {
     },
 }
 
+TIDE_STATION_CANDIDATES = {
+    "Baywater": [
+        {"type": "coops", "id": "9444900", "name": "Port Townsend",
+         "lat": 48.1112, "lon": -122.7597},
+    ],
+    "Sequim Bay": [
+        {"type": "coops", "id": "9444090", "name": "Port Angeles",
+         "lat": 48.125, "lon": -123.440},
+        {"type": "coops", "id": "9444900", "name": "Port Townsend",
+         "lat": 48.1112, "lon": -122.7597},
+    ],
+    "Goose Point": [
+        {"type": "coops", "id": "9440910", "name": "Toke Point",
+         "lat": 46.7075, "lon": -123.9669},
+    ],
+    "Westcott": [
+        {"type": "coops", "id": "9449880", "name": "Friday Harbor",
+         "lat": 48.5453, "lon": -123.0125},
+        {"type": "coops", "id": "9444900", "name": "Port Townsend",
+         "lat": 48.1112, "lon": -122.7597},
+    ],
+}
+
 METRIC_DEFS = {
     "water_temperature_C": {"label": "Water temp", "unit": "°C"},
+    "tide_height_m": {"label": "Tide height", "unit": "m MLLW"},
     "air_temperature_C": {"label": "Air temp", "unit": "°C"},
     "air_pressure_mb": {"label": "Pressure", "unit": "mb"},
     "wind_speed_m_s": {"label": "Wind", "unit": "m/s"},
@@ -309,6 +333,33 @@ def read_coops_wind(station):
     return metrics
 
 
+def read_coops_tide(station):
+    url = ("https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
+           "?product=water_level&date=latest&datum=MLLW"
+           f"&station={station['id']}&units=metric&time_zone=gmt"
+           "&format=json&application=mock-farm-dashboard")
+    data = json.loads(fetch(url))
+    rows = data.get("data")
+    if not rows:
+        return None
+    row = rows[-1]
+    try:
+        val = float(row["v"])
+        dt = datetime.strptime(row["t"], "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc)
+    except (KeyError, ValueError):
+        return None
+    if age_hours(dt) > MAX_AGE_HOURS:
+        return None
+    return metric_payload(
+        "tide_height_m",
+        val,
+        dt.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        url,
+        station,
+        PROVIDER["coops"],
+    )
+
+
 READERS = {"ndbc": read_ndbc, "coops": read_coops}
 PROVIDER = {"ndbc": "NOAA NDBC", "coops": "NOAA CO-OPS"}
 
@@ -334,6 +385,22 @@ def resolve_site(site):
                 **payload,
                 "distance_km": haversine_km(slat, slon, payload["station_lat"], payload["station_lon"]),
             }
+
+    for cand in TIDE_STATION_CANDIDATES[site]:
+        if cand["id"] not in tried:
+            tried.append(cand["id"])
+        try:
+            tide = read_coops_tide(cand)
+        except Exception as e:
+            print(f"  ! {site}: tide {cand['id']} failed ({e.__class__.__name__})",
+                  file=sys.stderr)
+            tide = None
+        if tide:
+            metrics[tide["key"]] = {
+                **tide,
+                "distance_km": haversine_km(slat, slon, tide["station_lat"], tide["station_lon"]),
+            }
+            break
 
     chlorophyll = CHLOROPHYLL_CANDIDATES[site]
     metrics["chlorophyll_fluorescence"] = {

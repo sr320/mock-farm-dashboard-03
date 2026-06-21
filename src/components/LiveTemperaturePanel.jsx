@@ -2,6 +2,7 @@ import liveTemperature from '../data/liveTemperature.json';
 
 const METRIC_ORDER = [
   'water_temperature_C',
+  'tide_height_m',
   'air_temperature_C',
   'salinity_psu',
   'wind_speed_m_s',
