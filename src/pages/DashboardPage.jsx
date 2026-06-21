@@ -4,7 +4,6 @@ import Filters from '../components/Filters';
 import FieldReportExport from '../components/FieldReportExport';
 import SummaryCards from '../components/SummaryCards';
 import TimeSeriesChart from '../components/TimeSeriesChart';
-import LiveTemperaturePanel from '../components/LiveTemperaturePanel';
 import ArchivalTemperatureChart from '../components/ArchivalTemperatureChart';
 import TreatmentComparisonChart from '../components/TreatmentComparisonChart';
 import SiteComparisonChart from '../components/SiteComparisonChart';
@@ -82,7 +81,6 @@ export default function DashboardPage() {
       <Filters filters={filters} onChange={setFilters} />
       <SummaryCards stats={summaryStats} />
       <TimeSeriesChart data={timeSeriesData} metric={filters.metric} />
-      <LiveTemperaturePanel />
       <ArchivalTemperatureChart />
       <div className="charts-row">
         <TreatmentComparisonChart

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import DashboardPage from './pages/DashboardPage';
+import LiveDataPage from './pages/LiveDataPage';
 import MapPage from './pages/MapPage';
 import { mockShellfishData } from './data/mockShellfishData';
 
@@ -14,6 +15,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/map" element={<MapPage />} />
+          <Route path="/live-data" element={<LiveDataPage />} />
         </Routes>
         <footer className="dashboard-footer">
           <p>
