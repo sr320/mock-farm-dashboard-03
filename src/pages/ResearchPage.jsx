@@ -58,7 +58,7 @@ const researchers = [
   },
   {
     name: 'Megan Ewing',
-    role: 'Incoming graduate student researcher',
+    role: 'Graduate student researcher',
     description:
       'Beginning in 2026, will expand related work with manila clams and basket cockles, including Manila clam field deployments at Agate Pass and Weavering Spit.',
   },
