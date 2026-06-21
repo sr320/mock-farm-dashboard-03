@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   LineChart,
   Line,
@@ -154,6 +155,12 @@ export default function ArchivalTemperatureChart() {
         ))}
         . Generated {generatedAt}.
       </p>
+      <div className="beta-link-row no-print">
+        <span className="beta-link-label">Beta</span>
+        <Link to="/live-data" className="beta-link">
+          View live environmental data and OSEL-scores
+        </Link>
+      </div>
     </section>
   );
 }

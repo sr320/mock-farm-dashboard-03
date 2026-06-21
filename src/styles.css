@@ -439,6 +439,42 @@ body {
   font-weight: 600;
 }
 
+.beta-link-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.beta-link-label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.35rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: #ffedd5;
+  color: #c2410c;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.beta-link {
+  color: var(--color-text-muted);
+  font-size: 0.84rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.beta-link:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
 .live-temperature-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

@@ -42,14 +42,6 @@ export default function Header() {
             >
               Site Map
             </NavLink>
-            <NavLink
-              to="/live-data"
-              className={({ isActive }) =>
-                isActive ? 'nav-link active' : 'nav-link'
-              }
-            >
-              Live Data
-            </NavLink>
           </nav>
         </div>
         <p className="disclaimer">
