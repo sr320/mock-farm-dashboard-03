@@ -1,5 +1,4 @@
 import liveTemperature from '../data/liveTemperature.json';
-import archivalTemperature from '../data/archivalTemperatureData.json';
 import { MapContainer, TileLayer, CircleMarker, Popup, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -30,11 +29,8 @@ const METRIC_ORDER = [
   'streamflow_cfs',
 ];
 
-const SUMMER_MONTHS = new Set([6, 7, 8, 9]);
-const TARGET_RED_SUMMER_STAGES = { min: 4, max: 5 };
 const VERY_LOW_TIDE_M = 0.3;
 const TIDE_WATCH_M = 0.6;
-const TEMP_WATCH_MARGIN_C = 1.5;
 const OSEL_FORECAST_DAYS = 28;
 const ELEVATED_AIR_TEMP_C = 22;
 const HIGH_AIR_TEMP_C = 25;
@@ -49,73 +45,6 @@ const PACIFIC_DATE_TIME_FORMAT_OPTIONS = {
   timeZone: PACIFIC_TIME_ZONE,
   timeZoneName: 'short',
 };
-
-function calibrateMortalityTemperatureThreshold() {
-  const summerSiteDays = [];
-  const monthsByYear = new Map();
-
-  for (const row of archivalTemperature.series) {
-    const month = Number(row.date.slice(5, 7));
-    if (!SUMMER_MONTHS.has(month)) continue;
-
-    const year = row.date.slice(0, 4);
-    const months = monthsByYear.get(year) ?? new Set();
-    months.add(month);
-    monthsByYear.set(year, months);
-
-    for (const site of archivalTemperature.sites) {
-      const temp = row[site];
-      if (!Number.isFinite(temp)) continue;
-      const roundedTemp = Math.round(temp * 10) / 10;
-      summerSiteDays.push({ year, temp: roundedTemp });
-    }
-  }
-
-  const completeYears = new Set(
-    [...monthsByYear.entries()]
-      .filter(([, months]) => [...SUMMER_MONTHS].every((month) => months.has(month)))
-      .map(([year]) => year)
-  );
-  const calibrationRows = summerSiteDays.filter(({ year }) => completeYears.has(year));
-  if (!calibrationRows.length) {
-    return { threshold: 22.2, averageStages: 4.5 };
-  }
-
-  const yearCount = Math.max(completeYears.size, 1);
-  const temps = calibrationRows.map(({ temp }) => temp);
-  const minTemp = Math.floor(Math.min(...temps) * 10);
-  const maxTemp = Math.ceil(Math.max(...temps) * 10);
-  const thresholds = Array.from(
-    { length: maxTemp - minTemp + 1 },
-    (_, index) => (minTemp + index) / 10
-  );
-  const candidates = thresholds.map((threshold) => {
-    const count = calibrationRows.filter(({ temp }) => temp >= threshold).length;
-    return { threshold, averageStages: count / yearCount };
-  });
-
-  const inTarget = candidates.filter(
-    ({ averageStages }) =>
-      averageStages >= TARGET_RED_SUMMER_STAGES.min &&
-      averageStages <= TARGET_RED_SUMMER_STAGES.max
-  );
-
-  const pool = inTarget.length ? inTarget : candidates;
-  const targetMidpoint =
-    (TARGET_RED_SUMMER_STAGES.min + TARGET_RED_SUMMER_STAGES.max) / 2;
-
-  return pool.reduce((best, candidate) => {
-    const bestDistance = Math.abs(best.averageStages - targetMidpoint);
-    const candidateDistance = Math.abs(candidate.averageStages - targetMidpoint);
-    if (candidateDistance < bestDistance) return candidate;
-    if (candidateDistance === bestDistance && candidate.threshold < best.threshold) {
-      return candidate;
-    }
-    return best;
-  });
-}
-
-const MORTALITY_TEMP_THRESHOLD = calibrateMortalityTemperatureThreshold();
 
 function formatObservedAt(value) {
   if (!value) return 'No timestamp';
@@ -136,60 +65,12 @@ function formatMetric(metric) {
   return metric.note ? `${value} · ${metric.note}` : value;
 }
 
-function formatValue(value, suffix) {
-  if (!Number.isFinite(value)) return 'Unavailable';
-  return `${value.toFixed(1)} ${suffix}`;
-}
-
 function formatForecastDate(date) {
   return date.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     timeZone: PACIFIC_TIME_ZONE,
   });
-}
-
-function getMortalityAdvisory(observation) {
-  const waterTemp = observation.metrics?.water_temperature_C?.value;
-  const tideHeight = observation.metrics?.tide_height_m?.value;
-  const hasInputs = Number.isFinite(waterTemp) && Number.isFinite(tideHeight);
-
-  if (!hasInputs) {
-    return {
-      stage: 'Unavailable',
-      className: 'is-unavailable',
-      summary: 'Needs current water temp and tide height',
-    };
-  }
-
-  const highTemp = waterTemp >= MORTALITY_TEMP_THRESHOLD.threshold;
-  const veryLowTide = tideHeight <= VERY_LOW_TIDE_M;
-
-  if (highTemp && veryLowTide) {
-    return {
-      stage: 'Red',
-      className: 'is-red',
-      summary: 'Very low tide with historically rare high temperature',
-    };
-  }
-
-  const warmTemp =
-    waterTemp >= MORTALITY_TEMP_THRESHOLD.threshold - TEMP_WATCH_MARGIN_C;
-  const lowTide = tideHeight <= TIDE_WATCH_M;
-
-  if (highTemp || (warmTemp && lowTide)) {
-    return {
-      stage: 'Watch',
-      className: 'is-watch',
-      summary: 'One stressor is near the Red range',
-    };
-  }
-
-  return {
-    stage: 'Normal',
-    className: 'is-normal',
-    summary: 'Below Red temperature and tide thresholds',
-  };
 }
 
 function clamp(value, min, max) {
@@ -614,10 +495,6 @@ export default function LiveTemperaturePanel() {
 
       <div className="live-temperature-grid">
         {observations.map((observation) => {
-          const advisory = getMortalityAdvisory(observation);
-          const waterTemp = observation.metrics?.water_temperature_C?.value;
-          const tideHeight = observation.metrics?.tide_height_m?.value;
-
           return (
             <article key={observation.site} className="live-temperature-card">
               <div className="live-temperature-card-header">
@@ -643,24 +520,6 @@ export default function LiveTemperaturePanel() {
                   {observation.note ?? 'No fresh reading available'}
                 </p>
               )}
-
-              <div className={`mortality-advisory ${advisory.className}`}>
-                <div className="mortality-advisory-header">
-                  <span>Mortality Advisory Index</span>
-                  <strong>{advisory.stage}</strong>
-                </div>
-                <p>{advisory.summary}</p>
-                <p>
-                  Now: {formatValue(waterTemp, '°C')} /{' '}
-                  {formatValue(tideHeight, 'm MLLW')}
-                </p>
-                <p>
-                  Red: ≥{MORTALITY_TEMP_THRESHOLD.threshold.toFixed(1)} °C and ≤
-                  {VERY_LOW_TIDE_M.toFixed(1)} m MLLW. Historical temp frequency:{' '}
-                  {MORTALITY_TEMP_THRESHOLD.averageStages.toFixed(1)} summer
-                  site-days/year.
-                </p>
-              </div>
 
               <dl className="live-environment-metrics">
                 {metricRows(observation.metrics).map((metric) => (
