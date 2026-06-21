@@ -1,4 +1,6 @@
-# SHIELD
+<p align="center">
+  <img src="src/assets/logo-lockup.png" alt="SHIELD — Shellfish Hardening and Integrated Environmental Longitudinal Dashboard" width="440" />
+</p>
 
 Shellfish Hardening and Integrated Environmental Longitudinal Dashboard.
 
