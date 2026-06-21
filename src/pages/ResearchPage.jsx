@@ -107,10 +107,9 @@ export default function ResearchPage() {
         <p className="research-kicker">Research Overview</p>
         <h2>Shellfish Stress-Hardening Field Research</h2>
         <p>
-          SHIELD supports collaborative research aimed at reducing the
-          frequency and severity of oyster mass mortality events associated with
-          OsHV-1 infection and extreme climate events, including marine and
-          aerial heatwaves.
+          SHIELD advances collaborative research rooted in oyster farming,
+          connecting lab science with on-the-water experience to help growers
+          anticipate challenges and improve crop outcomes.
         </p>
       </section>
 
