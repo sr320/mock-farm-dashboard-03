@@ -478,6 +478,88 @@ body {
   color: var(--color-text-muted);
 }
 
+.mortality-advisory {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--color-border);
+  border-left-width: 4px;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.mortality-advisory-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+}
+
+.mortality-advisory-header span {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mortality-advisory-header strong {
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.mortality-advisory p {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.mortality-advisory.is-normal {
+  border-color: #bbf7d0;
+  border-left-color: #16a34a;
+  background: #f0fdf4;
+}
+
+.mortality-advisory.is-normal .mortality-advisory-header strong {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.mortality-advisory.is-watch {
+  border-color: #fde68a;
+  border-left-color: #d97706;
+  background: #fffbeb;
+}
+
+.mortality-advisory.is-watch .mortality-advisory-header strong {
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.mortality-advisory.is-red {
+  border-color: #fecaca;
+  border-left-color: #dc2626;
+  background: #fef2f2;
+}
+
+.mortality-advisory.is-red .mortality-advisory-header strong {
+  color: #ffffff;
+  background: #dc2626;
+}
+
+.mortality-advisory.is-unavailable {
+  border-color: var(--color-border);
+  border-left-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.mortality-advisory.is-unavailable .mortality-advisory-header strong {
+  color: #475569;
+  background: #e2e8f0;
+}
+
 .live-environment-metrics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
