@@ -4,12 +4,14 @@ import archivalTemperature from '../data/archivalTemperatureData.json';
 const METRIC_ORDER = [
   'water_temperature_C',
   'tide_height_m',
+  'next_tide_height_m',
   'air_temperature_C',
   'salinity_psu',
   'wind_speed_m_s',
   'air_pressure_mb',
   'relative_humidity_percent',
   'chlorophyll_fluorescence',
+  'streamflow_cfs',
 ];
 
 const SUMMER_MONTHS = new Set([6, 7, 8, 9]);
@@ -108,7 +110,8 @@ function formatMetric(metric) {
   if (metric.value == null) {
     return metric.status === 'source-matched' ? 'Import pending' : 'Unavailable';
   }
-  return `${metric.value} ${metric.unit}`.trim();
+  const value = `${metric.value} ${metric.unit}`.trim();
+  return metric.note ? `${value} · ${metric.note}` : value;
 }
 
 function formatValue(value, suffix) {

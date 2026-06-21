@@ -40,10 +40,12 @@ OUT = os.path.join(REPO, "src", "data", "liveTemperature.json")
 MAX_AGE_HOURS = 48
 HTTP_TIMEOUT = 30
 
-# Site coordinates — kept in sync with SITE_LOCATIONS in
-# src/data/mockShellfishData.js (the real C. gigas outplant sites).
+# Site coordinates. Most are real C. gigas outplant sites from
+# src/data/mockShellfishData.js; environmental-only sites can be listed here
+# without entering the oyster observation dataset.
 SITES = {
     "Baywater": (47.808, -122.738),       # Thorndyke Bay, Hood Canal
+    "Dabob Bay": (47.7617, -122.85),      # Whitney Point / Pt. Whitney Lagoon
     "Sequim Bay": (48.07, -123.03),       # Sequim Bay
     "Goose Point": (46.62, -123.86),      # Palix River, Willapa Bay
     "Westcott": (48.582, -123.167),       # Westcott Bay, San Juan Island
@@ -55,6 +57,12 @@ SITES = {
 STATION_CANDIDATES = {
     "Baywater": [
         {"type": "ndbc", "id": "46125", "name": "Hood Canal (NDBC 46125)",
+         "lat": 47.907, "lon": -122.627},
+        {"type": "coops", "id": "9444900", "name": "Port Townsend",
+         "lat": 48.1112, "lon": -122.7597},
+    ],
+    "Dabob Bay": [
+        {"type": "ndbc", "id": "46125", "name": "Hansville - Hood Canal (NDBC 46125)",
          "lat": 47.907, "lon": -122.627},
         {"type": "coops", "id": "9444900", "name": "Port Townsend",
          "lat": 48.1112, "lon": -122.7597},
@@ -88,6 +96,12 @@ CHLOROPHYLL_CANDIDATES = {
         "source_url": "https://nvs.nanoos.org/ShellfishGrowers",
         "note": "Closest shellfish-focused in-situ chlorophyll match for Thorndyke/Hood Canal.",
     },
+    "Dabob Bay": {
+        "provider": "NANOOS Shellfish Growers / UW ORCA",
+        "station_name": "Hood Canal ORCA Dabob Bay mooring",
+        "source_url": "https://nvs.nanoos.org/ShellfishGrowers",
+        "note": "Closest shellfish-focused water-quality source for Pt. Whitney Lagoon / Dabob Bay.",
+    },
     "Sequim Bay": {
         "provider": "NANOOS Shellfish Growers / Padilla Bay NERR",
         "station_name": "Padilla Bay / Bayview water-quality stations",
@@ -113,6 +127,10 @@ TIDE_STATION_CANDIDATES = {
         {"type": "coops", "id": "9444900", "name": "Port Townsend",
          "lat": 48.1112, "lon": -122.7597},
     ],
+    "Dabob Bay": [
+        {"type": "coops", "id": "9444900", "name": "Port Townsend",
+         "lat": 48.1112, "lon": -122.7597},
+    ],
     "Sequim Bay": [
         {"type": "coops", "id": "9444090", "name": "Port Angeles",
          "lat": 48.125, "lon": -123.440},
@@ -131,9 +149,32 @@ TIDE_STATION_CANDIDATES = {
     ],
 }
 
+TIDE_PREDICTION_CANDIDATES = {
+    "Dabob Bay": [
+        {"id": "9445246", "name": "Whitney Point, Dabob Bay",
+         "lat": 47.7617, "lon": -122.85},
+        {"id": "9445272", "name": "Quilcene, Quilcene Bay, Dabob Bay",
+         "lat": 47.8, "lon": -122.858},
+        {"id": "9445269", "name": "Zelatched Point, Dabob Bay",
+         "lat": 47.7117, "lon": -122.822},
+    ],
+}
+
+WATERSHED_CANDIDATES = {
+    "Dabob Bay": [
+        {"id": "12052210", "name": "Big Quilcene River below diversion near Quilcene, WA",
+         "lat": 47.78450887, "lon": -122.9795778},
+        {"id": "12051900", "name": "Little Quilcene River below diversion near Quilcene, WA",
+         "lat": 47.87481306, "lon": -122.9596127},
+        {"id": "12054000", "name": "Duckabush River near Brinnon, WA",
+         "lat": 47.68398059, "lon": -123.011551},
+    ],
+}
+
 METRIC_DEFS = {
     "water_temperature_C": {"label": "Water temp", "unit": "°C"},
     "tide_height_m": {"label": "Tide height", "unit": "m MLLW"},
+    "next_tide_height_m": {"label": "Next tide", "unit": "m MLLW"},
     "air_temperature_C": {"label": "Air temp", "unit": "°C"},
     "air_pressure_mb": {"label": "Pressure", "unit": "mb"},
     "wind_speed_m_s": {"label": "Wind", "unit": "m/s"},
@@ -144,6 +185,7 @@ METRIC_DEFS = {
     "relative_humidity_percent": {"label": "Humidity", "unit": "%"},
     "wave_height_m": {"label": "Wave height", "unit": "m"},
     "chlorophyll_fluorescence": {"label": "Chlorophyll", "unit": "RFU"},
+    "streamflow_cfs": {"label": "Streamflow", "unit": "ft3/s"},
 }
 
 NDBC_COLUMNS = {
@@ -360,6 +402,76 @@ def read_coops_tide(station):
     )
 
 
+def read_coops_tide_prediction(station):
+    url = ("https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
+           "?product=predictions&date=today&datum=MLLW&interval=hilo"
+           f"&station={station['id']}&units=metric&time_zone=gmt"
+           "&format=json&application=mock-farm-dashboard")
+    data = json.loads(fetch(url))
+    rows = data.get("predictions")
+    if not rows:
+        return None
+    now = datetime.now(timezone.utc)
+    upcoming = []
+    for row in rows:
+        try:
+            dt = datetime.strptime(row["t"], "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc)
+            val = float(row["v"])
+        except (KeyError, ValueError):
+            continue
+        if dt >= now:
+            upcoming.append((dt, val, row.get("type")))
+    if not upcoming:
+        return None
+    dt, val, tide_type = min(upcoming, key=lambda item: item[0])
+    kind = "high" if tide_type == "H" else "low" if tide_type == "L" else "tide"
+    payload = metric_payload(
+        "next_tide_height_m",
+        val,
+        dt.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        url,
+        station,
+        "NOAA CO-OPS",
+    )
+    if payload:
+        payload["note"] = f"Predicted {kind} at {dt.strftime('%Y-%m-%d %H:%M')} UTC"
+    return payload
+
+
+def read_usgs_streamflow(station):
+    url = ("https://waterservices.usgs.gov/nwis/iv/"
+           f"?format=json&sites={station['id']}&parameterCd=00060"
+           "&period=P1D&siteStatus=all")
+    data = json.loads(fetch(url))
+    series = data.get("value", {}).get("timeSeries", [])
+    if not series:
+        return None
+    values = series[0].get("values", [])
+    if not values or not values[0].get("value"):
+        return None
+    for row in reversed(values[0]["value"]):
+        try:
+            val = float(row["value"])
+            dt = datetime.fromisoformat(row["dateTime"].replace("Z", "+00:00"))
+        except (KeyError, ValueError):
+            continue
+        dt_utc = dt.astimezone(timezone.utc)
+        if age_hours(dt_utc) > MAX_AGE_HOURS:
+            return None
+        payload = metric_payload(
+            "streamflow_cfs",
+            val,
+            dt_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            url,
+            station,
+            "USGS NWIS",
+        )
+        if payload:
+            payload["note"] = "Nearby watershed freshwater-flow context; not an in-lagoon sensor."
+        return payload
+    return None
+
+
 READERS = {"ndbc": read_ndbc, "coops": read_coops}
 PROVIDER = {"ndbc": "NOAA NDBC", "coops": "NOAA CO-OPS"}
 
@@ -399,6 +511,38 @@ def resolve_site(site):
             metrics[tide["key"]] = {
                 **tide,
                 "distance_km": haversine_km(slat, slon, tide["station_lat"], tide["station_lon"]),
+            }
+            break
+
+    for cand in TIDE_PREDICTION_CANDIDATES.get(site, []):
+        if cand["id"] not in tried:
+            tried.append(cand["id"])
+        try:
+            prediction = read_coops_tide_prediction(cand)
+        except Exception as e:
+            print(f"  ! {site}: tide prediction {cand['id']} failed ({e.__class__.__name__})",
+                  file=sys.stderr)
+            prediction = None
+        if prediction:
+            metrics[prediction["key"]] = {
+                **prediction,
+                "distance_km": haversine_km(slat, slon, prediction["station_lat"], prediction["station_lon"]),
+            }
+            break
+
+    for cand in WATERSHED_CANDIDATES.get(site, []):
+        if cand["id"] not in tried:
+            tried.append(cand["id"])
+        try:
+            streamflow = read_usgs_streamflow(cand)
+        except Exception as e:
+            print(f"  ! {site}: streamflow {cand['id']} failed ({e.__class__.__name__})",
+                  file=sys.stderr)
+            streamflow = None
+        if streamflow:
+            metrics[streamflow["key"]] = {
+                **streamflow,
+                "distance_km": haversine_km(slat, slon, streamflow["station_lat"], streamflow["station_lon"]),
             }
             break
 
