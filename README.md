@@ -1,8 +1,6 @@
 <p align="center">
-  <img src="src/assets/logo-lockup.png" alt="SHIELD — Shellfish Hardening and Integrated Environmental Longitudinal Dashboard" width="440" />
+  <img src="src/assets/logo-lockup.png" alt="SHIELD — Shellfish Hardening and Integrated Environmental Longitudinal Dashboard" width="640" />
 </p>
-
-Shellfish Hardening and Integrated Environmental Longitudinal Dashboard.
 
 SHIELD is a lightweight web dashboard for exploring how stress-hardening
 treatments perform across Pacific Northwest shellfish outplant sites. It brings
