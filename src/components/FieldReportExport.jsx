@@ -48,7 +48,8 @@ function getFilterSummary(filters) {
 
 function buildCsv(data, filters, stats) {
   const metadataRows = [
-    ['Shellfish Farm Outplant Field Report'],
+    ['SHIELD Field Report'],
+    ['Dashboard', 'Shellfish Hardening and Integrated Environmental Longitudinal Dashboard'],
     ['Generated', new Date().toISOString()],
     ['Date range', getDateRange(data)],
     ['Record count', data.length],
@@ -86,7 +87,7 @@ export default function FieldReportExport({ filters, stats, data }) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `shellfish-field-report-${getFileDate()}.csv`;
+    link.download = `shield-field-report-${getFileDate()}.csv`;
     document.body.append(link);
     link.click();
     link.remove();
@@ -95,7 +96,7 @@ export default function FieldReportExport({ filters, stats, data }) {
 
   const handlePrint = () => {
     const previousTitle = document.title;
-    document.title = `Shellfish Field Report ${getFileDate()}`;
+    document.title = `SHIELD Field Report ${getFileDate()}`;
     window.print();
     window.setTimeout(() => {
       document.title = previousTitle;
@@ -166,7 +167,10 @@ export default function FieldReportExport({ filters, stats, data }) {
       )}
 
       <div className="print-only report-print-title">
-        <h1>Shellfish Farm Outplant Field Report</h1>
+        <h1>SHIELD Field Report</h1>
+        <p>
+          Shellfish Hardening and Integrated Environmental Longitudinal Dashboard
+        </p>
         <p>
           Generated {generatedLabel} · {data.length.toLocaleString()} records ·{' '}
           {dateRange}

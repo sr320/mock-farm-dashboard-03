@@ -13,11 +13,14 @@ export default function Header() {
               alt="Roberts Lab logo"
             />
             <div>
-              <h1>Shellfish Farm Outplant Dashboard</h1>
+              <h1>SHIELD</h1>
               <p className="subtitle">
-                Multi-year <em>Crassostrea gigas</em> stress-hardening outplant
-                monitoring across Puget Sound &amp; Willapa Bay farm sites and
-                priming treatments
+                Shellfish Hardening and Integrated Environmental Longitudinal
+                Dashboard
+              </p>
+              <p className="subtitle">
+                Tracking how stress-hardening treatments perform across farms,
+                years, and environments.
               </p>
             </div>
           </div>

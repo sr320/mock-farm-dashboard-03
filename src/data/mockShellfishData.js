@@ -1,5 +1,5 @@
 /**
- * Real observation data for the Shellfish Farm Outplant Dashboard.
+ * Real observation data for SHIELD.
  *
  * Records are produced by `scripts/build_real_observations.py` from the
  * RobertsLab `project-gigas-conditioning` repo (+ Baywater 10K-Seed survival

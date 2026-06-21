@@ -17,7 +17,8 @@ export default function App() {
         </Routes>
         <footer className="dashboard-footer">
           <p>
-            Shellfish Farm Outplant Dashboard · Real field data — RobertsLab
+            SHIELD · Shellfish Hardening and Integrated Environmental
+            Longitudinal Dashboard · Real field data — RobertsLab
             project-gigas-conditioning + Baywater 10K-Seed ·{' '}
             {mockShellfishData.length.toLocaleString()} observation records
           </p>

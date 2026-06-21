@@ -1,6 +1,10 @@
-# Shellfish Farm Outplant Dashboard
+# SHIELD
 
-A polished, lightweight static web dashboard for visualizing mock shellfish farm outplant monitoring data over four years. Built with React, Vite, and Recharts — no backend required.
+Shellfish Hardening and Integrated Environmental Longitudinal Dashboard.
+
+Tracking how stress-hardening treatments perform across farms, years, and environments.
+
+A polished, lightweight static web dashboard for visualizing shellfish farm outplant monitoring data over multiple years. Built with React, Vite, and Recharts — no backend required.
 
 ![Dashboard screenshot placeholder](docs/screenshot-placeholder.png)
 
@@ -8,7 +12,7 @@ A polished, lightweight static web dashboard for visualizing mock shellfish farm
 
 ## Overview
 
-This dashboard presents simulated multi-year monitoring data from four shellfish farm sites, comparing priming treatments across growth, temperature, and survival metrics. It is designed as a shareable demo suitable for GitHub Pages hosting.
+This dashboard presents multi-year monitoring data from shellfish farm sites, comparing stress-hardening treatments across growth, temperature, and survival metrics. It is designed as a shareable demo suitable for GitHub Pages hosting.
 
 ## Data Description
 
@@ -115,7 +119,7 @@ The React Router basename is derived automatically from this setting.
 ## Project Structure
 
 ```
-shellfish-farm-dashboard/
+shield-dashboard/
 ├── README.md
 ├── package.json
 ├── index.html
